@@ -1,0 +1,56 @@
+---
+title: "PCA_learning_UKfoods"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+```{r}
+x <- read.csv("~/Desktop/R-BIMM143/UK_foods.csv")
+dim(x)
+head(x)
+```
+
+```{r}
+# fix rownames because it seems as though it was not set properly
+rownames(x) <- x[,1]
+x <- x[,-1]
+head(x)
+```
+
+
+```{r}
+knitr::kable(x, caption="The full UK foods data table")
+```
+
+```{r}
+par(mar=c(20, 4, 4, 2))
+heatmap(as.matrix(x))
+pca <- prcomp( t(x) )
+summary(pca)
+plot(pca$x[,1], pca$x[,2], xlab="PC1", ylab="PC2", xlim=c(-270,500))
+text(pca$x[,1], pca$x[,2], colnames(x))
+pca$sdev
+v <- round( pca$sdev^2/sum(pca$sdev^2) * 100 )
+z <- summary(pca)
+z$importance
+barplot(v, xlab="Principal Component", ylab="Percent Variation")
+cumsum(v)
+```
+
+```{r}
+## Lets focus on PC1 as it accounts for > 90% of variance 
+par(mar=c(10, 4, 4, 2))
+barplot( pca$rotation[,1], las=2 )
+## Or the inbuilt biplot() can be useful too 
+biplot(pca)
+```
+
+
+```{r}
+
+```
+
+
